@@ -23,7 +23,7 @@ const API = axios.create({
 // Persistent LocalStorage + In-Memory Fast Caching Engine (24 Hours Fallback)
 const inMemoryCache = new Map();
 const CACHE_KEY_PREFIX = 'jh_cache_';
-const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 Hours
+const CACHE_TTL_MS = 5 * 60 * 1000; // 24 Hours
 
 const getCachedData = (key) => {
   // 1. Check fast in-memory map
@@ -110,6 +110,7 @@ API.interceptors.response.use(
 );
 
 // Helper for Live GET Requests with Local Cache Fallback & Safe Error Protection
+
 const cachedGet = async (url, config = {}) => {
   const cacheKey = url + JSON.stringify(config.params || {});
 
@@ -118,12 +119,19 @@ const cachedGet = async (url, config = {}) => {
     setCachedData(cacheKey, response);
     return response;
   } catch (err) {
-    // If network / server error, return stale cache if available
+    // Use cached data only if the backend request fails.
     const cached = getCachedData(cacheKey);
-    if (cached) return cached;
-    return { data: { success: false, data: null, message: err.message } };
+
+    if (cached) {
+      console.warn('API request failed; using cached data:', err.message);
+      return cached;
+    }
+
+    // Let the calling code handle the real API error.
+    throw err;
   }
 };
+
 
 // API Endpoints Services
 export const authService = {

@@ -36,11 +36,30 @@ const Jobs = () => {
     size: 6,
   });
 
+  const [searchKeyword, setSearchKeyword] = useState(
+  searchParams.get('keyword') || ''
+);
+
+const [searchLocation, setSearchLocation] = useState(
+  searchParams.get('location') || ''
+);
+
   const { isAuthenticated, isCandidate } = useAuth();
 
-  useEffect(() => {
-    fetchJobs();
-  }, [filters]);
+ useEffect(() => {
+  fetchJobs();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [
+  filters.keyword,
+  filters.location,
+  filters.jobType,
+  filters.experienceLevel,
+  filters.minimumSalary,
+  filters.skills,
+  filters.page,
+  filters.size,
+  filters.sort,
+]);
 
   const fetchJobs = async () => {
     try {
@@ -91,6 +110,8 @@ const Jobs = () => {
   };
 
   const handleClearFilters = () => {
+    setSearchKeyword('');
+    setSearchLocation('');
     setFilters({
       keyword: '',
       location: '',
@@ -106,10 +127,15 @@ const Jobs = () => {
   };
 
   const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    setFilters(prev => ({ ...prev, page: 0 }));
-  };
+  e.preventDefault();
 
+  setFilters(prev => ({
+    ...prev,
+    keyword: searchKeyword.trim(),
+    location: searchLocation.trim(),
+    page: 0,
+  }));
+};
   return (
     <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
       
@@ -147,8 +173,8 @@ const Jobs = () => {
             <input
               type="text"
               placeholder="Job title, skill or keyword..."
-              value={filters.keyword}
-              onChange={(e) => setFilters({ ...filters, keyword: e.target.value })}
+              value={searchKeyword}
+onChange={(e) => setSearchKeyword(e.target.value)}
               style={{ width: '100%', padding: '0.75rem 0.75rem 0.75rem 2.4rem', border: 'none', background: 'transparent', color: '#0f172a', fontSize: '0.95rem', outline: 'none' }}
             />
           </div>
@@ -158,8 +184,8 @@ const Jobs = () => {
             <input
               type="text"
               placeholder="Location..."
-              value={filters.location}
-              onChange={(e) => setFilters({ ...filters, location: e.target.value })}
+             value={searchLocation}
+             onChange={(e) => setSearchLocation(e.target.value)}
               style={{ width: '100%', padding: '0.75rem 0.75rem 0.75rem 2.4rem', border: 'none', background: 'transparent', color: '#0f172a', fontSize: '0.95rem', outline: 'none' }}
             />
           </div>
