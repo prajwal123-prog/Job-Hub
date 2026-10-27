@@ -59,22 +59,30 @@ const Jobs = () => {
     searchParams.get('location') || ''
   );
 
-  const { isAuthenticated, isCandidate } = useAuth();
+const { isAuthenticated, isCandidate, loading: authLoading } = useAuth();
 
   useEffect(() => {
-    fetchJobs();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    filters.keyword,
-    filters.location,
-    filters.jobType,
-    filters.experienceLevel,
-    filters.minimumSalary,
-    filters.skills,
-    filters.page,
-    filters.size,
-    filters.sort,
-  ]);
+  if (authLoading) {
+    return;
+  }
+
+  fetchJobs();
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [
+  authLoading,
+  isAuthenticated,
+  isCandidate,
+  filters.keyword,
+  filters.location,
+  filters.jobType,
+  filters.experienceLevel,
+  filters.minimumSalary,
+  filters.skills,
+  filters.page,
+  filters.size,
+  filters.sort,
+]);
 
   const fetchJobs = async () => {
     try {
