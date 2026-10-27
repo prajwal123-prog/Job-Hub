@@ -55,13 +55,34 @@ const Navbar = () => {
             </NavLink>
           </li>
 
-          {isAuthenticated ? (
-            <>
-              <li>
-                <NavLink to={dashboardPath} onClick={() => setMobileMenuOpen(false)} className={({ isActive }) => (isActive ? 'navbar-link active' : 'navbar-link')}>
-                  Dashboard
-                </NavLink>
-              </li>
+         
+{isAuthenticated ? (
+  <>
+    <li>
+      <NavLink
+        to={dashboardPath}
+        onClick={() => setMobileMenuOpen(false)}
+        className={({ isActive }) =>
+          isActive ? 'navbar-link active' : 'navbar-link'
+        }
+      >
+        Dashboard
+      </NavLink>
+    </li>
+
+    {isRecruiter && (
+      <li>
+        <NavLink
+          to="/company-profile"
+          onClick={() => setMobileMenuOpen(false)}
+          className={({ isActive }) =>
+            isActive ? 'navbar-link active' : 'navbar-link'
+          }
+        >
+          Company Profile
+        </NavLink>
+      </li>
+    )}
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginLeft: '0.5rem' }}>
                 <Link to="/profile" onClick={() => setMobileMenuOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none', color: 'inherit', padding: '0.35rem 0.75rem', background: 'var(--background)', borderRadius: 'var(--radius-full)' }}>

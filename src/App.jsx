@@ -4,12 +4,14 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
 
+
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Jobs from './pages/Jobs';
 import JobDetails from './pages/JobDetails';
 import Companies from './pages/Companies';
+import CompanyProfile from './pages/CompanyProfile';
 import CompanyDetails from './pages/CompanyDetails';
 import About from './pages/About';
 import CandidateDashboard from './pages/CandidateDashboard';
@@ -62,6 +64,7 @@ function App() {
           />
 
           {/* Recruiter Protected Routes */}
+          
           <Route
             path="/recruiter-dashboard"
             element={
@@ -70,6 +73,14 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+  path="/company-profile"
+  element={
+    <ProtectedRoute allowedRoles={['RECRUITER']}>
+      <CompanyProfile />
+    </ProtectedRoute>
+  }
+/>
           <Route
             path="/post-job"
             element={
